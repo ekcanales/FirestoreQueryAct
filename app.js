@@ -6,6 +6,8 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
+  doc,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
@@ -84,3 +86,102 @@ const q9 = query(
 );
 const snapshot9 = await getDocs(q9);
 snapshot9.forEach((doc) => console.log("Top scorer legends:", doc.data()));
+
+// -------------------------------------------------------------------
+
+// Task 3 - Updating Data
+
+// Task 3 Part A
+
+async function updateTeamsData() {
+  const snapshot = await getDocs(teamsRef);
+
+  snapshot.forEach(async (teamDoc) => {
+    const data = teamDoc.data();
+    const ref = doc(db, "teams", teamDoc.id);
+
+    // Update Real Madrid
+    if (data.name.includes("Real Madrid")) {
+      await updateDoc(ref, {
+        name: "Real Madrid FC",
+        worldwideFans: 811,
+        topScorers: data.topScorers
+          .filter((scorer) => scorer !== "Hazard")
+          .concat("Crispo"),
+      });
+      console.log("Updated Real Madrid FC");
+    }
+
+    // Update Barcelona
+    if (data.name === "Barcelona") {
+      await updateDoc(ref, {
+        name: "FC Barcelona",
+        worldwideFans: 747,
+        topScorers: data.topScorers
+          .filter((scorer) => scorer !== "Puyol")
+          .concat("Deco"),
+      });
+      console.log("Updated FC Barcelona");
+    }
+  });
+}
+
+//  Task 3 Part B
+
+async function addJerseyColors() {
+  const snapshot = await getDocs(teamsRef);
+
+  snapshot.forEach(async (teamDoc) => {
+    const data = teamDoc.data();
+    const ref = doc(db, "teams", teamDoc.id);
+
+    if (data.name === "Real Madrid FC") {
+      await updateDoc(ref, {
+        color: {
+          home: "White",
+          away: "Black",
+        },
+      });
+      console.log("Added color to Real Madrid FC");
+    }
+
+    if (data.name === "FC Barcelona") {
+      await updateDoc(ref, {
+        color: {
+          home: "Red",
+          away: "Gold",
+        },
+      });
+      console.log("Added color to FC Barcelona");
+    }
+  });
+}
+
+//  Task 3 Part C
+
+async function updateJerseyAwayColors() {
+  const snapshot = await getDocs(teamsRef);
+
+  snapshot.forEach(async (teamDoc) => {
+    const data = teamDoc.data();
+    const ref = doc(db, "teams", teamDoc.id);
+
+    if (data.name === "Real Madrid FC") {
+      await updateDoc(ref, {
+        "color.away": "Purple",
+      });
+      console.log("Changed RM away to Purple");
+    }
+
+    if (data.name === "FC Barcelona") {
+      await updateDoc(ref, {
+        "color.away": "Pink",
+      });
+      console.log("Changed Barca away to Pink");
+    }
+  });
+}
+
+updateTeamsData();
+addJerseyColors();
+updateJerseyAwayColors();
