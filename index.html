@@ -39,7 +39,7 @@
           city: "Barcelona",
           country: "Spain",
           topScorers: ["Messi", "Suarez", "Puyol"],
-          worldwideFans: 798,
+          worldwideFans: 738,
         },
         {
           name: "Manchester United",
@@ -78,15 +78,17 @@
         },
       ];
 
-      teams.forEach(async (team) => {
-        try {
-          await addDoc(collection(db, "teams"), team);
-          console.log(`Added ${team.name} to Firestore`);
-        } catch (error) {
-          console.error("Error adding document:", error);
-        }
-      });
+      //   teams.forEach(async (team) => {
+      //     try {
+      //       await addDoc(collection(db, "teams"), team);
+      //       console.log(`Added ${team.name} to Firestore`);
+      //     } catch (error) {
+      //       console.error("Error adding document:", error);
+      //     }
+      //   });
     </script>
+    <h1>Query Results:</h1>
+    <div id="output"></div>
     <script type="module" src="./app.js"></script>
   </body>
 </html>

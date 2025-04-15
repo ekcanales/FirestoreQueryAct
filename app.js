@@ -25,67 +25,109 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const teamsRef = collection(db, "teams");
 
-// 1. Show all teams in Spain
-const q1 = query(teamsRef, where("country", "==", "Spain"));
-const snapshot1 = await getDocs(q1);
-snapshot1.forEach((doc) => console.log("Spain:", doc.data()));
+function displayResults(title, dataArray) {
+  const outputDiv = document.getElementById("output");
+  const section = document.createElement("section");
+  section.innerHTML = `<h3>${title}</h3>`;
 
-// 2. Show all teams in Madrid, Spain
-const q2 = query(
-  teamsRef,
-  where("country", "==", "Spain"),
-  where("city", "==", "Madrid")
-);
-const snapshot2 = await getDocs(q2);
-snapshot2.forEach((doc) => console.log("Madrid, Spain:", doc.data()));
+  const ul = document.createElement("ul");
+  dataArray.forEach((data) => {
+    const li = document.createElement("li");
+    li.textContent = `${data.name} — ${data.city ?? "N/A"}, ${data.country} — ${
+      data.worldwideFans
+    }M fans`;
+    ul.appendChild(li);
+  });
+
+  section.appendChild(ul);
+  outputDiv.appendChild(section);
+}
+
+// 1. Show all teams in Spain
+// const q1 = query(teamsRef, where("country", "==", "Spain"));
+// const snapshot1 = await getDocs(q1);
+// const results1 = [];
+// snapshot1.forEach((doc) => {
+//   results1.push(doc.data());
+// });
+// displayResults("Teams in Spain:", results1);
+
+// // 2. Show all teams in Madrid, Spain
+// const q2 = query(
+//   teamsRef,
+//   where("country", "==", "Spain"),
+//   where("city", "==", "Madrid")
+// );
+// const snapshot2 = await getDocs(q2);
+// const results2 = [];
+// snapshot2.forEach((doc) => {
+//   results2.push(doc.data());
+// });
+// displayResults("Teams in Madrid:", results2);
 
 // 3. Show all national teams (city === null)
-const snapshot3 = await getDocs(teamsRef);
-snapshot3.docs
-  .filter((doc) => doc.data().city === null)
-  .forEach((doc) => console.log("National:", doc.data()));
+// const snapshot3 = await getDocs(teamsRef);
+// const results3 = snapshot3.docs
+//   .filter((doc) => doc.data().city === null)
+//   .map((doc) => doc.data());
+// displayResults("National Teams", results3);
 
 // 4. Show all teams that are not in Spain
-const snapshot4 = await getDocs(teamsRef);
-snapshot4.docs
-  .filter((doc) => doc.data().country !== "Spain")
-  .forEach((doc) => console.log("Not Spain:", doc.data()));
+// const snapshot4 = await getDocs(teamsRef);
+// const results4 = snapshot4.docs
+//   .filter((doc) => doc.data().country !== "Spain")
+//   .map((doc) => doc.data());
+// displayResults("Non-Spanish Teams:", results4);
 
 // 5. Show all teams not in Spain or England
-const snapshot5 = await getDocs(teamsRef);
-snapshot5.docs
-  .filter((doc) => !["Spain", "England"].includes(doc.data().country))
-  .forEach((doc) => console.log("Not Spain or England:", doc.data()));
+// const snapshot5 = await getDocs(teamsRef);
+// const results5 = snapshot5.docs
+//   .filter((doc) => !["Spain", "England"].includes(doc.data().country))
+//   .map((doc) => doc.data());
+// displayResults("Non-Spanish or English Teams:", results5);
 
 // 6. Teams in Spain with more than 700M fans
-const snapshot6 = await getDocs(teamsRef);
-snapshot6.docs
-  .filter(
-    (doc) => doc.data().country === "Spain" && doc.data().worldwideFans > 700
-  )
-  .forEach((doc) => console.log("Spain + >700M fans:", doc.data()));
+// const snapshot6 = await getDocs(teamsRef);
+// const results6 = snapshot6.docs
+//   .filter(
+//     (doc) => doc.data().country === "Spain" && doc.data().worldwideFans > 700
+//   )
+//   .map((doc) => doc.data());
+// displayResults("Spanish teams >700M:", results6);
 
-// 7. Teams with 500M–600M fans
-const q7 = query(
-  teamsRef,
-  where("worldwideFans", ">=", 500),
-  where("worldwideFans", "<=", 600)
-);
-const snapshot7 = await getDocs(q7);
-snapshot7.forEach((doc) => console.log("Fans 500M–600M:", doc.data()));
+// 7. Teams with 500M-600M fans
+// const q7 = query(
+//   teamsRef,
+//   where("worldwideFans", ">=", 500),
+//   where("worldwideFans", "<=", 600)
+// );
+// const snapshot7 = await getDocs(q7);
+// const results7 = [];
+// snapshot7.forEach((doc) => {
+//   results7.push(doc.data());
+// });
+// displayResults("Teams with 500M to 600M", results7);
 
 // 8. Teams where Ronaldo is a top scorer
-const q8 = query(teamsRef, where("topScorers", "array-contains", "Ronaldo"));
-const snapshot8 = await getDocs(q8);
-snapshot8.forEach((doc) => console.log("Top scorer Ronaldo:", doc.data()));
+// const q8 = query(teamsRef, where("topScorers", "array-contains", "Ronaldo"));
+// const snapshot8 = await getDocs(q8);
+// const results8 = [];
+// snapshot8.forEach((doc) => {
+//   results8.push(doc.data());
+// });
+// displayResults("Ronaldo is a top scorer", results8);
 
 // 9. Ronaldo, Messi, or Maradona are top scorers
-const q9 = query(
-  teamsRef,
-  where("topScorers", "array-contains-any", ["Ronaldo", "Messi", "Maradona"])
-);
-const snapshot9 = await getDocs(q9);
-snapshot9.forEach((doc) => console.log("Top scorer legends:", doc.data()));
+// const q9 = query(
+//   teamsRef,
+//   where("topScorers", "array-contains-any", ["Ronaldo", "Messi", "Maradona"])
+// );
+// const snapshot9 = await getDocs(q9);
+// const results9 = [];
+// snapshot9.forEach((doc) => {
+//   results9.push(doc.data());
+// });
+// displayResults("Ronaldo, Messi, or Maradona are top scorer", results9);
 
 // -------------------------------------------------------------------
 
